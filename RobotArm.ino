@@ -14,11 +14,12 @@ void setup() {
  
 void loop() {
 	// // Serial.println(val);        
-
-	int val = analogRead(potPin); 	 
-	val = map(val, 0, 1023, 0, 179); 
-	Serial.println(val);
-	servo.write(val); 
+	Serial.println(Serial.read());
+	delay(20);
+	// int val = analogRead(potPin); 	 
+	// val = map(val, 0, 1023, 0, 179); 
+	// Serial.println(val);
+	// servo.write(val); 
 	// delay(50);
 	// Serial.println("wat");
 	// servo.write(45);    
