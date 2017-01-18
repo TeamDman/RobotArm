@@ -10,11 +10,14 @@ void setup() {
   Serial.println("init servo");
   servo.attach(servoPin);
 }
- 
- 
+
+int red;
 void loop() {
 	// // Serial.println(val);        
-	Serial.println(Serial.read());
+	// Serial.println("boy");
+	
+	if ((red = Serial.read()) > -1) 
+		Serial.println(red);
 	delay(20);
 	// int val = analogRead(potPin); 	 
 	// val = map(val, 0, 1023, 0, 179); 
