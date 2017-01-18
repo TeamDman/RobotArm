@@ -6,12 +6,12 @@ int servoAngle = 0;
 Servo servo;  
  
 void setup() {
-  Serial.begin(9600);  
+  Serial.begin(38400);  
   Serial.println("init servo");
   servo.attach(servoPin);
 }
 
-int red;
+char red;
 void loop() {
 	// // Serial.println(val);        
 	// Serial.println("boy");

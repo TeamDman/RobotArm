@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/../../../rxtx-2.2pre2-bins/RXTXcomm.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../rxtx-2.2pre2/src" />
+    </SOURCES>
   </library>
 </component>
