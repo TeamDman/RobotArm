@@ -1,21 +1,33 @@
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * Created by s401321 on 18/01/2017.
  */
 public class FormControl {
     private JPanel main;
-    private JButton turnButton;
+    private JSlider sliderMain;
+    private JSlider sliderSecondary;
+    private JSlider sliderClaw;
+    private JSlider sliderBase;
 
     public FormControl() {
-        turnButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
+        sliderMain.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+                ArduinoController.setArmAngle(ArduinoController.Servos.MAIN, source.getValue());
         });
+        sliderSecondary.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+                ArduinoController.setArmAngle(ArduinoController.Servos.SECONDARY, source.getValue());
+        });
+        sliderClaw.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+                ArduinoController.setArmAngle(ArduinoController.Servos.CLAW, source.getValue());
+        });
+        sliderBase.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+                ArduinoController.setArmAngle(ArduinoController.Servos.BASE, source.getValue());
+        });
+
     }
 
     public static void create() {

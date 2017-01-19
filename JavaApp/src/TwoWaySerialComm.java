@@ -1,12 +1,18 @@
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * This version of the TwoWaySerialComm example makes use of the
+ * SerialPortEventListener to avoid polling.
+ *
+ */
 public class TwoWaySerialComm
 {
     public TwoWaySerialComm()
@@ -28,14 +34,15 @@ public class TwoWaySerialComm
             if ( commPort instanceof SerialPort )
             {
                 SerialPort serialPort = (SerialPort) commPort;
-//                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-                serialPort.setSerialPortParams(38400,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
                 InputStream in = serialPort.getInputStream();
                 OutputStream out = serialPort.getOutputStream();
 
-                (new Thread(new SerialReader(in))).start();
                 (new Thread(new SerialWriter(out))).start();
+
+                serialPort.addEventListener(new SerialReader(in));
+                serialPort.notifyOnDataAvailable(true);
 
             }
             else
@@ -45,32 +52,42 @@ public class TwoWaySerialComm
         }
     }
 
-    /** */
-    public static class SerialReader implements Runnable
+    /**
+     * Handles the input coming from the serial port. A new line character
+     * is treated as the end of a block in this example.
+     */
+    public static class SerialReader implements SerialPortEventListener
     {
-        InputStream in;
+        private InputStream in;
+        private byte[] buffer = new byte[1024];
 
         public SerialReader ( InputStream in )
         {
             this.in = in;
         }
 
-        public void run ()
-        {
-            byte[] buffer = new byte[1024];
-            int len = -1;
+        public void serialEvent(SerialPortEvent arg0) {
+            int data;
+
             try
             {
-                while ( ( len = this.in.read(buffer)) > -1 )
+                int len = 0;
+                while ( ( data = in.read()) > -1 )
                 {
-                    System.out.print(new String(buffer,0,len));
+                    if ( data == '\n' ) {
+                        break;
+                    }
+                    buffer[len++] = (byte) data;
                 }
+                System.out.print(new String(buffer,0,len));
             }
             catch ( IOException e )
             {
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
+
     }
 
     /** */
@@ -96,16 +113,18 @@ public class TwoWaySerialComm
             catch ( IOException e )
             {
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
     }
+
+
 
     public static void main ( String[] args )
     {
         try
         {
-            TwoWaySerialComm com = new TwoWaySerialComm();
-            com.connect("COM22");
+            (new TwoWaySerialComm()).connect("COM3");
         }
         catch ( Exception e )
         {
@@ -113,4 +132,6 @@ public class TwoWaySerialComm
             e.printStackTrace();
         }
     }
+
+
 }

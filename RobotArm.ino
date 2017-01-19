@@ -1,45 +1,53 @@
 #include <Servo.h>
- 
-int servoPin = A1;
-int potPin = 0;
-int servoAngle = 0;
-Servo servo;  
- 
+
+Servo servoMain;  
+Servo servoSecondary;  
+Servo servoClaw;
+Servo servoBase;
+
 void setup() {
   Serial.begin(38400);  
   Serial.println("init servo");
-  servo.attach(servoPin);
+  servoMain.attach(A2);
+  servoSecondary.attach(A1);
+  servoClaw.attach(A3);
+  servoBase.attach(A4);
 }
 
-char red;
+enum servos {
+	MAIN='a',
+	SECONDARY='b',
+	CLAW='c',
+	BASE='d'
+};
+char in;
 void loop() {
-	// // Serial.println(val);        
-	// Serial.println("boy");
-	
-	if ((red = Serial.read()) > -1) 
-		Serial.println(red);
+	if ((in = Serial.read()) > -1) {
+		Serial.print("echo ");
+		Serial.print(in - '0');
+		Serial.print("\t");
+		switch(in) {
+			case MAIN:
+				Serial.print("Main Arm Adjusting");
+				servoMain.write(in = Serial.read());
+				break;
+			case SECONDARY:
+				Serial.print("Secondary Arm Adjusting");
+				servoSecondary.write(in = Serial.read());
+				break;
+			case CLAW:
+				Serial.print("Claw Adjusting");
+				servoClaw.write(in = Serial.read());
+				break;
+			case BASE:
+				Serial.print("Base Adjusting");
+				servoBase.write(in = Serial.read());
+				break;
+			default:
+				Serial.print("Unknown Input");	
+		}
+		Serial.print("\t");
+		Serial.println(in-'0');
+	}
 	delay(20);
-	// int val = analogRead(potPin); 	 
-	// val = map(val, 0, 1023, 0, 179); 
-	// Serial.println(val);
-	// servo.write(val); 
-	// delay(50);
-	// Serial.println("wat");
-	// servo.write(45);    
-	// delay(1000);        
-	// servo.write(90);    
-	// delay(1000);        
-	// servo.write(135);   
-	// delay(1000);        
-	// servo.write(90);    
-	// delay(1000);
- //  for(servoAngle = 12; servoAngle < 180; servoAngle++) {                                  
-	// servo.write(servoAngle);              
-	// delay(50);                  
- //  }
- 
- //  for(servoAngle = 180; servoAngle > 0; servoAngle--) {                                
-	// servo.write(servoAngle);          
-	// delay(10);      
- //  }
 }
