@@ -29,19 +29,19 @@ void loop() {
 		switch(in) {
 			case MAIN:
 				Serial.print("Main Arm Adjusting");
-				servoMain.write(in = Serial.read());
+				servoMain.write(in = (Serial.read() + 48));
 				break;
 			case SECONDARY:
 				Serial.print("Secondary Arm Adjusting");
-				servoSecondary.write(in = Serial.read());
+				servoSecondary.write(in = (Serial.read() + 48));
 				break;
 			case CLAW:
 				Serial.print("Claw Adjusting");
-				servoClaw.write(in = Serial.read());
+				servoClaw.write(in = (Serial.read() + 48));
 				break;
 			case BASE:
 				Serial.print("Base Adjusting");
-				servoBase.write(in = Serial.read());
+				servoBase.write(in = (Serial.read() + 48));
 				break;
 			default:
 				Serial.print("Unknown Input");	

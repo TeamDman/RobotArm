@@ -4,9 +4,12 @@
 
 import gnu.io.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArduinoController {
     public static OutputStream board;
@@ -22,13 +25,6 @@ public class ArduinoController {
         }
     }
     public static void main(String[] args) {
-        listPorts();
-
-        try {
-            connect("COM22", 38400);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         FormControl.create();
     }
 
@@ -44,7 +40,7 @@ public class ArduinoController {
     static void connect(String portName, int baud) throws Exception {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
         if (portIdentifier.isCurrentlyOwned()) {
-            System.out.println("Error: Port is currently in use");
+            JOptionPane.showMessageDialog(null,"Error: Port is currently in use");
         } else {
             CommPort commPort = portIdentifier.open(ArduinoController.class.getName(), 2000);
             if (commPort instanceof SerialPort) {
@@ -56,7 +52,7 @@ public class ArduinoController {
 
                 (new Thread(new SerialReader(in))).start();
             } else {
-                System.out.println("Error: Only serial ports are handled by this example.");
+                JOptionPane.showMessageDialog(null,"Error: Only serial ports are handled");
             }
         }
     }
@@ -81,28 +77,37 @@ public class ArduinoController {
         }
     }
 
-    static void listPorts() {
+    static List<CommPortIdentifier> getPorts() {
+        ArrayList<CommPortIdentifier> rtn = new ArrayList<>();
         java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier portIdentifier = portEnum.nextElement();
-            System.out.println(portIdentifier.getName() + " - " + getPortTypeName(portIdentifier.getPortType()));
+           rtn.add(portIdentifier);
         }
+        return rtn;
     }
 
-    static String getPortTypeName(int portType) {
-        switch (portType) {
+    static String getPortName(CommPortIdentifier comm) {
+        String rtn = comm.getName() + " - ";
+        switch (comm.getPortType()) {
             case CommPortIdentifier.PORT_I2C:
-                return "I2C";
+                rtn += "I2C";
+                break;
             case CommPortIdentifier.PORT_PARALLEL:
-                return "Parallel";
+                rtn += "Parallel";
+                break;
             case CommPortIdentifier.PORT_RAW:
-                return "Raw";
+                rtn += "Raw";
+                break;
             case CommPortIdentifier.PORT_RS485:
-                return "RS485";
+                rtn += "RS485";
+                break;
             case CommPortIdentifier.PORT_SERIAL:
-                return "Serial";
+                rtn += "Serial";
+                break;
             default:
-                return "unknown type";
+                rtn += "unknown type";
         }
+        return rtn;
     }
 }
