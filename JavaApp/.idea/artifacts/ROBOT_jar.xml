@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ROBOT:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ROBOT_jar</output-path>
+    <root id="archive" name="JavaApp.jar">
+      <element id="module-output" name="JavaApp" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../rxtx-2.2pre2-bins/RXTXcomm.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
