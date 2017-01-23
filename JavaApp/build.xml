@@ -1,0 +1,15 @@
+<!-- roll up everyting into a single jar file -->
+<target name="dist" depends="clean, compile" description="Generate the distribution file.">
+    <!--
+    Copy the library .jars to the directory where the distribution will be located
+    -->
+    <copy todir="${dist}">
+        <fileset dir="${lib}"/>
+    </copy>
+    <!-- TODO: Generate the MANIFEST.MF file on the fly -->
+    <jar jarfile="${dist}/myCalculator.jar" basedir="${build}" manifest="tools/MANIFEST.MF"/>
+    <!-- dump to web server -->
+    <copy todir="${web-files}">
+        <fileset dir="${dist}"/>
+    </copy>
+</target>
